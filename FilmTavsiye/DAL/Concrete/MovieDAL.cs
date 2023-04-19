@@ -1,10 +1,6 @@
 ﻿using CORE;
 using DAL.Abrtract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Concrete
 {
@@ -19,16 +15,23 @@ namespace DAL.Concrete
             return base.AddRange(movies);
         }
 
-        public override IEnumerable<Movie> GetAll()
+        public override CustomResult<Movie> GetAll(int page = 1, int count = 10)
         {
-            return base.GetAll();
+            return base.GetAll(page, count);
         }
 
         public IEnumerable<int> GetAllIds()
         {
             List<int> ids = new List<int>();
-            ids = base.dataContext.Movies.Select(x => x.tmdb_id).ToList();
+            ids = base.dataContext.Movies.Select(x => x.TmdbId).ToList();
             return ids;
+        }
+
+        public Movie GetDetail(int id)
+        {
+            Movie movie = new Movie();
+            movie = base.dataContext.Movies.Include(movie => movie.MovieNotes).Where(x => x.Id == id).AsNoTracking().FirstOrDefault();
+            return movie;
         }
     }
 }

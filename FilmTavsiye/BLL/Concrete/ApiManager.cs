@@ -47,20 +47,20 @@ namespace BLL.Concrete
                 apiResult_s.Where(x => !ids.Contains(x.id)).ToList().ForEach(x =>
                 {
                     Movie movie = new Movie();
-                    movie.tmdb_id = x.id;
-                    movie.title = x.title;
-                    movie.release_date = x.release_date;
-                    movie.poster_path = x.poster_path;
-                    movie.backdrop_path = x.backdrop_path;
-                    movie.popularity = x.popularity;
-                    movie.adult = x.adult;
-                    movie.genre_ids = x.genre_ids;
-                    movie.original_language = x.original_language;
-                    movie.original_title = x.original_title;
-                    movie.video = x.video;
-                    movie.vote_average = x.vote_average;
-                    movie.vote_count = x.vote_count;
-                    movie.overview = x.overview;
+                    movie.TmdbId = x.id;
+                    movie.Title = x.title;
+                    movie.ReleaseDate = x.release_date;
+                    movie.PosterPath = x.poster_path;
+                    movie.BackdropPath = x.backdrop_path;
+                    movie.Popularity = x.popularity;
+                    movie.Adult = x.adult;
+                    movie.GenreIds = x.genre_ids;
+                    movie.OriginalLanguage = x.original_language;
+                    movie.OriginalTitle = x.original_title;
+                    movie.Video = x.video;
+                    movie.VoteAverage = x.vote_average;
+                    movie.VoteCount = x.vote_count;
+                    movie.Overview = x.overview;
 
                     movieList.Add(movie);
                 });

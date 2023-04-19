@@ -1,11 +1,5 @@
 ﻿using CORE;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -14,5 +8,6 @@ namespace DAL
         public DataContext(DbContextOptions<DataContext> options) : base(options) { }
 
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<MovieNote> MovieNotes { get; set; }
     }
 }

@@ -4,6 +4,9 @@ using DAL.Concrete;
 using API;
 using DAL;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,30 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+// authentication
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "https://www.mikro.com.tr",
+        ValidAudience = "MyAudienceValue",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("MySigningKeyForSha256Security"))
+    };
+});
+
+
+// database configuration
+builder.Services.DALDependencies(builder.Configuration);
+
 // Dependency Injection
 string TMDBApiKey = builder.Configuration.GetSection("ApiKeys:TMDB").Value ?? "";
 var contextOptions = new DbContextOptionsBuilder<DataContext>()
@@ -22,13 +49,10 @@ var contextOptions = new DbContextOptionsBuilder<DataContext>()
 
 
 builder.Services.AddSingleton<IApiManager>(x => new ApiManager(new ApiService(TMDBApiKey), new MovieDAL(new DataContext(contextOptions))));
-
+builder.Services.AddSingleton<IMovieManager>(x=> new MovieManager(new MovieDAL(new DataContext(contextOptions))));
 
 // worker service
 builder.Services.AddHostedService<Worker>();
-
-// database configuration
-builder.Services.DALDependencies(builder.Configuration);
 
 
 var app = builder.Build();
@@ -42,6 +66,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+// authentication
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -5,11 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DAL.Abrtract
+namespace BLL.Abstract
 {
-    public interface IMovieDAL : IRepository<Movie>
+    public interface IMovieManager
     {
-        IEnumerable<int> GetAllIds();
+        CustomResult<Movie> GetAll(int page, int count);
         Movie GetDetail(int id);
     }
 }

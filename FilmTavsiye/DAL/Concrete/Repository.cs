@@ -1,4 +1,6 @@
-﻿using DAL.Abrtract;
+﻿using CORE;
+using DAL.Abrtract;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,10 +23,20 @@ namespace DAL.Concrete
             return true;
         }
 
-        public virtual IEnumerable<T> GetAll()
+        public virtual CustomResult<T> GetAll(int page = 1, int count = 10)
         {
-            List<T> list = dataContext.Set<T>().ToList();
-            return list;
+            CustomResult<T> result = new CustomResult<T>();
+            int totalcount = dataContext.Set<T>().AsNoTracking().Count();
+            int skip = (page - 1) * count;
+            IQueryable<T> list = dataContext.Set<T>().AsNoTracking().Skip(skip).Take(count).ToList().AsQueryable();
+
+            result.list = list;
+            result.count = count;
+            result.resultCount = list.Count();
+            result.page = page;
+            result.totalCount = totalcount;
+            result.totalPage = totalcount % count > 0 ? (totalcount % count + 1) : (totalcount % count);
+            return result;
         }
     }
 }
