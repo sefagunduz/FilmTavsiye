@@ -1,11 +1,6 @@
 ﻿using CORE;
 using DAL.Abrtract;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Concrete
 {
@@ -16,6 +11,7 @@ namespace DAL.Concrete
         {
             this.dataContext = dataContext;
         }
+
         public virtual bool AddRange(IEnumerable<T> t)
         {
             dataContext.Set<T>().AddRange(t);

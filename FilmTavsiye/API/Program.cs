@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using CORE;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,9 +48,17 @@ var contextOptions = new DbContextOptionsBuilder<DataContext>()
     .UseNpgsql(builder.Configuration.GetConnectionString("WebApiDatabase"))
     .Options;
 
+HostMail hostMail = new HostMail
+{
+    Port = Convert.ToInt16(builder.Configuration.GetSection("HostMail:Port").Value),
+    SenderMail = builder.Configuration.GetSection("HostMail:SenderMail").Value ?? "",
+    SenderPassword = builder.Configuration.GetSection("HostMail:SenderPassword").Value ?? "",
+    HostMailServer = builder.Configuration.GetSection("HostMail:HostMailServer").Value ?? ""
+};
 
 builder.Services.AddSingleton<IApiManager>(x => new ApiManager(new ApiService(TMDBApiKey), new MovieDAL(new DataContext(contextOptions))));
 builder.Services.AddSingleton<IMovieManager>(x=> new MovieManager(new MovieDAL(new DataContext(contextOptions))));
+builder.Services.AddSingleton<IMailManager>(x => new MailManager(new MovieDAL(new DataContext(contextOptions)), hostMail));
 
 // worker service
 builder.Services.AddHostedService<Worker>();

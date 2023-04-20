@@ -34,32 +34,39 @@ namespace DAL.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("BackdropPath")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<List<int>>("GenreIds")
                         .IsRequired()
                         .HasColumnType("integer[]");
 
                     b.Property<string>("OriginalLanguage")
-                        .HasColumnType("text");
+                        .HasMaxLength(2)
+                        .HasColumnType("character varying(2)");
 
                     b.Property<string>("OriginalTitle")
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<string>("Overview")
-                        .HasColumnType("text");
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<double>("Popularity")
                         .HasColumnType("double precision");
 
                     b.Property<string>("PosterPath")
-                        .HasColumnType("text");
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
 
                     b.Property<string>("ReleaseDate")
-                        .HasColumnType("text");
+                        .HasMaxLength(10)
+                        .HasColumnType("character varying(10)");
 
                     b.Property<string>("Title")
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<int>("TmdbId")
                         .HasColumnType("integer");
@@ -90,8 +97,8 @@ namespace DAL.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Note")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<byte>("Score")
                         .HasColumnType("smallint");

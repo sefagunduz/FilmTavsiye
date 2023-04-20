@@ -10,9 +10,22 @@ namespace DAL.Concrete
         {
         }
 
+        public bool AddNote(MovieNote movieNote)
+        {
+            base.dataContext.MovieNotes.Add(movieNote);
+            base.dataContext.SaveChanges();
+            return true;
+        }
+
         public override bool AddRange(IEnumerable<Movie> movies)
         {
             return base.AddRange(movies);
+        }
+
+        public Movie Get(int id)
+        {
+            Movie movie = base.dataContext.Movies.AsNoTracking().Where(x => x.Id == id).FirstOrDefault() ?? new Movie();
+            return movie;
         }
 
         public override CustomResult<Movie> GetAll(int page = 1, int count = 10)

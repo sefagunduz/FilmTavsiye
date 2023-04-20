@@ -1,9 +1,4 @@
 ﻿using CORE;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Abstract
 {
@@ -11,5 +6,6 @@ namespace BLL.Abstract
     {
         CustomResult<Movie> GetAll(int page, int count);
         Movie GetDetail(int id);
+        bool AddNote(MovieNote movieNote);
     }
 }

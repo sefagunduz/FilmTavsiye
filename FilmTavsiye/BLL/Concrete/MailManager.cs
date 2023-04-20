@@ -1,22 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using BLL.Abstract;
+using CORE;
+using DAL.Abrtract;
 using System.Net.Mail;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Concrete
 {
-    public class MailManager
+    public class MailManager: IMailManager
     {
-
-        private MailMessage CreateMessage(string ToMail)
+        private readonly IMovieDAL movieDAL;
+        private readonly HostMail hostMail;
+        public MailManager(IRepository<Movie> repository, HostMail hostMail)
         {
+            this.movieDAL = (IMovieDAL)repository;
+            this.hostMail = hostMail;   
+        }
+
+        public bool Recommend(RecommendMail recommendMail)
+        {
+            Movie movie = movieDAL.Get(recommendMail.MovieId);
+
+            MailMessage message = CreateMessage(recommendMail.MailAddress, movie);
+            return MailSend(hostMail.Port, hostMail.HostMailServer, hostMail.SenderMail, hostMail.SenderPassword, message); ;
+        }
+
+        private MailMessage CreateMessage(string ToMail, Movie movie)
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("<h1>I recommend you a movie</h1>");
+            stringBuilder.AppendLine(string.Format("<h5>{0}<h5>", movie.Title));
+
             MailMessage message = new MailMessage();
             message.Subject = "I recommend you a movie.";
-            message.Body = string.Empty;
+            message.Body = stringBuilder.ToString();
             message.To.Add(ToMail);
             message.IsBodyHtml = true;
+            message.From = new MailAddress(hostMail.SenderMail);
 
             return message;
         }
@@ -28,17 +47,14 @@ namespace BLL.Concrete
                 SmtpClient client = new SmtpClient();
                 client.Port = Port;
                 client.Host = HostMailServer;
-                client.EnableSsl = false;
-                client.Timeout = 10000;
-                client.DeliveryMethod = SmtpDeliveryMethod.Network;
-                client.UseDefaultCredentials = false;
+                client.EnableSsl = true;
                 client.Credentials = new System.Net.NetworkCredential(SenderMail, SenderPassword);
                 client.Send(Message);
                 return true;
             }
             catch (Exception)
             {
-                return true;
+                return false;
                 throw;
             }
         }

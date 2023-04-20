@@ -1,9 +1,4 @@
 ﻿using CORE;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Abrtract
 {
@@ -11,5 +6,7 @@ namespace DAL.Abrtract
     {
         IEnumerable<int> GetAllIds();
         Movie GetDetail(int id);
+        bool AddNote(MovieNote movieNote);
+        Movie Get(int id);
     }
 }

@@ -11,9 +11,12 @@ namespace API.Controllers
     public class MovieController : ControllerBase
     {
         private readonly IMovieManager movieManager;
-        public MovieController(IMovieManager movieManager)
+        private readonly IMailManager mailManager;
+        public MovieController(IMovieManager movieManager, IMailManager mailManager)
         {
             this.movieManager = movieManager;
+            this.mailManager = mailManager;
+
         }
 
         [HttpGet]
@@ -29,6 +32,20 @@ namespace API.Controllers
         {
             Movie movie = movieManager.GetDetail(id);
             return movie;
+        }
+
+        [HttpPost]
+        [Route("Note")]
+        public IActionResult AddNote(MovieNote movieNote)
+        {
+            return Ok(movieManager.AddNote(movieNote));
+        }
+
+        [HttpPost]
+        [Route("Recommend")]
+        public IActionResult Recommend(RecommendMail recommendMail)
+        {
+            return Ok(mailManager.Recommend(recommendMail));
         }
     }
 }

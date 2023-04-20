@@ -1,11 +1,6 @@
 ﻿using BLL.Abstract;
 using CORE;
 using DAL.Abrtract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BLL.Concrete
 {
@@ -15,6 +10,16 @@ namespace BLL.Concrete
         public MovieManager(IRepository<Movie> repository)
         {
             this.movieDAL = (IMovieDAL)repository;
+        }
+
+        public bool AddNote(MovieNote movieNote)
+        {
+            if (movieNote != null && movieNote.Score >= 1 && movieNote.Score <= 10)
+            {
+                movieNote.Id = 0;
+                return movieDAL.AddNote(movieNote);
+            }
+            return false;
         }
 
         public CustomResult<Movie> GetAll(int page = 1, int count = 10)
